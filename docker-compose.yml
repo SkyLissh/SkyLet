@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  app:
+    image: "skylet:dev"
+    container_name: "skylet"
+    build:
+      target: development
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/skylet
+    command: sh ./start.sh
+    env_file:
+      - .env

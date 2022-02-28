@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 from typing import Union
 
 import discord
@@ -10,6 +12,8 @@ from app.models.gif import GifResponse
 
 load_dotenv()
 
+log: logging.Logger = logging.getLogger(__name__)
+
 client = discord.Client()
 
 DISCORD_TOKEN: Union[str, None] = os.getenv("DISCORD_TOKEN")
@@ -18,7 +22,8 @@ TENOR_KEY: Union[str, None] = os.getenv("TENOR_KEY")
 RANDOM_URL: str = "https://g.tenor.com/v1/random?"
 
 if DISCORD_TOKEN is None:
-    raise ValueError("DISCORD_TOKEN is not set")
+    log.info("Token not found, exiting...")
+    sys.exit(0)
 
 
 def get_gif(query: str) -> GifResponse:
@@ -69,4 +74,5 @@ async def on_message(message: discord.Message) -> None:
                 await message.channel.send(embed)
 
 
-client.run(DISCORD_TOKEN)
+if __name__ == "__main__":
+    client.run(DISCORD_TOKEN)
