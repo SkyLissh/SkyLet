@@ -13,3 +13,5 @@ services:
     command: sh ./start.sh
     env_file:
       - .env
+    restart: always
+  

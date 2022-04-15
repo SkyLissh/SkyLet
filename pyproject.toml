@@ -9,6 +9,7 @@ python = "^3.9"
 "discord.py" = "^1.7.3"
 python-dotenv = "^0.19.2"
 requests = "^2.27.1"
+twitchAPI = "^2.5.3"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"

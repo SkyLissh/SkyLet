@@ -1,11 +1,14 @@
 import logging
 import os
 import sys
+from pprint import pprint
 from typing import Union
 
 import discord
 import requests
 from dotenv import load_dotenv
+from twitchAPI.eventsub import EventSub
+from twitchAPI.twitch import Twitch
 
 from app.commands import GIF_COMMANDS
 from app.models.gif import GifResponse
@@ -18,6 +21,12 @@ client = discord.Client()
 
 DISCORD_TOKEN: Union[str, None] = os.getenv("DISCORD_TOKEN")
 TENOR_KEY: Union[str, None] = os.getenv("TENOR_KEY")
+
+twitch = Twitch(os.getenv("TWITCH_CLIENT_ID"), os.getenv("TWITCH_CLIENT_SECRET"))
+twitch.authenticate_app([])
+
+TARGET_USERNAME: str = "aisuki_zero"
+WEBHOOK_URL: str = "https://skylet.skylissh.me:443"
 
 RANDOM_URL: str = "https://g.tenor.com/v1/random?"
 
@@ -55,9 +64,29 @@ def create_embed(message: discord.Message, cmd: str) -> Union[discord.Embed, str
     return embedded
 
 
+async def on_follow(data: dict) -> None:
+    pprint(data)
+
+
 @client.event
 async def on_ready() -> None:
     print(f"Logged in as {client.user}")
+    user_info = twitch.get_users(logins=[TARGET_USERNAME])
+    user_id: str = user_info["data"][0]["id"]
+
+    hook = EventSub(WEBHOOK_URL, os.getenv("TWITCH_CLIENT_ID"), 8080, twitch)
+    hook.unsubscribe_all()
+
+    hook.start()
+    print("subscribing to hooks")
+    hook.listen_channel_follow(user_id, on_follow)
+
+    try:
+        input("press enter to exit")
+    finally:
+        hook.stop()
+
+    print("exiting...")
 
 
 @client.event
