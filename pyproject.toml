@@ -6,10 +6,9 @@ authors = ["Alisson Lopez <alisson.hdz.lopez@hotmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-"discord.py" = "^1.7.3"
 python-dotenv = "^0.19.2"
-requests = "^2.27.1"
-twitchAPI = "^2.5.3"
+"discord.py" = "^1.7.3"
+tabulate = "^0.8.9"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
@@ -18,7 +17,7 @@ black = "^22.1.0"
 isort = "^5.10.1"
 autoflake = "^1.4"
 "discord.py-stubs" = "^1.7.3"
-types-requests = "^2.27.10"
+types-tabulate = "^0.8.6"
 
 [tool.black]
 exclude = '''
