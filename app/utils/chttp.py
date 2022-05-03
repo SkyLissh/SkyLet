@@ -48,7 +48,7 @@ class TwitchCHTTP:
                 self.logger.fatal(f"{await res.text()}")
                 self.token = None
 
-            token: Token = await res.json()
+            token = Token.from_json(await res.json())
             try:
                 token.expires_in += time.time()
             except KeyError:

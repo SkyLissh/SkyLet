@@ -1,4 +1,5 @@
 from json import loads
+from typing import Any
 
 import aiohttp
 
@@ -21,7 +22,7 @@ class CHTTPResponse:
     async def make(aiorequest: aiohttp.ClientResponse) -> "CHTTPResponse":
         return CHTTPResponse(aiorequest, await aiorequest.text())
 
-    async def json(self) -> dict:
+    async def json(self) -> dict[str, Any]:
         return loads(self._text)
 
     def raise_for_status(self) -> None:
