@@ -9,6 +9,8 @@
 	"python.formatting.provider": "black",
 	"python.sortImports.path": "isort",
 
+	"python.analysis.typeCheckingMode": "basic",
+
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true
