@@ -13,17 +13,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Setup environment
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Setup poetry
-        uses: abatilo/actions-poetry@v2.0.0
+
+      - name: Install Linters
+        run: pip install flake8 mypy black
+
+      - name: Run Linters
+        uses: wearerequired/lint-action@v2
         with:
-          poetry-version: 1.1.13
-      - name: Install dependencies
-        run: poetry install
-      - name: Lint
-        run: |
-          poetry run black --check --diff --exclude __pycache__ --exclude __init__.py .
-          poetry run isort --check-only --diff .
+          flake8: true
+          mypy: true
+          black: true
