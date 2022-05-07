@@ -1,6 +1,6 @@
 name: Lint and Build
 
-on 
+on:
   push:
     branches: [main]
   pull_request:
