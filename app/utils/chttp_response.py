@@ -1,10 +1,8 @@
 from json import loads
 from typing import Any
-
 import aiohttp
 
 
-# pylint: disable=too-few-public-methods
 class exceptions:
     class HTTPError(Exception):
         pass
