@@ -1,4 +1,4 @@
-name: Lint and Build
+name: Lint
 
 on:
   push:
@@ -26,4 +26,4 @@ jobs:
       - name: Lint
         run: |
           poetry run black --check --diff --exclude __pycache__ --exclude __init__.py .
-          poetry run isort --check-only --diff --recursive .
+          poetry run isort --check-only --diff .
