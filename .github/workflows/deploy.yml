@@ -19,4 +19,4 @@ jobs:
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
             git status
-            docker-compose -f docker-compose.yml -f docker-compose.up.yml up --build -d
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
