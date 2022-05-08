@@ -58,5 +58,6 @@ async def on_ready() -> None:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
 
     bot.run(DISCORD_TOKEN)
