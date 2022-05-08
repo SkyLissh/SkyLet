@@ -15,4 +15,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: whoami
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git pull origin main
+            git status
+            docker-compose -f docker-compose.yml -f docker-compose.up.yml up --build -d
