@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "skylet"
+name = "SkyLet Discord"
 version = "0.1.0"
-description = "A bot version of SkyLissh to do hard taks"
+description = "Discord bot multi-purpose for SkyLissh"
 authors = ["Alisson Lopez <alisson.hdz.lopez@hotmail.com>"]
 
 [tool.poetry.dependencies]
