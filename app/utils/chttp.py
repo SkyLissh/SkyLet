@@ -3,7 +3,7 @@ import logging
 import os
 import time
 from math import ceil
-from typing import Optional
+from typing import Any, Optional
 
 import aiohttp
 
@@ -48,7 +48,7 @@ class TwitchCHTTP:
                 self.logger.fatal(f"{await res.text()}")
                 self.token = None
 
-            token = Token.from_json(await res.json())
+            token = Token.parse_obj(await res.json())
             try:
                 token.expires_in += time.time()
             except KeyError:
@@ -62,7 +62,7 @@ class TwitchCHTTP:
             self.token = token
 
     async def get(
-        self, url: str, params: Optional[dict[str, str]] = None
+        self, url: str, params: Optional[dict[str, Any]] = None
     ) -> CHTTPResponse:
         """
         Perform an HTTP GET request to Twitch API

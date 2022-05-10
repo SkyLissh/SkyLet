@@ -31,7 +31,7 @@ class Twitch(cmd.Cog):
         res = await chttp_twitch.get("/streams", params={"user_login": streamer})
         res.raise_for_status()
 
-        streams = ApiResponse(await res.json(), Stream)
+        streams = ApiResponse[Stream].parse_obj(await res.json())
 
         if len(streams.data) == 0:
             return None
@@ -42,7 +42,7 @@ class Twitch(cmd.Cog):
         res = await chttp_twitch.get("/users", params={"login": streamer})
         res.raise_for_status()
 
-        users = ApiResponse(await res.json(), User)
+        users = ApiResponse[User].parse_obj(await res.json())
 
         if len(users.data) == 0:
             return None
@@ -96,7 +96,8 @@ class Twitch(cmd.Cog):
 
     @cmd.Cog.listener()
     async def on_ready(self) -> None:
-        await self.check_streams.start()
+        # await self.check_streams.start()
+        pass
 
 
 def setup(bot: cmd.Bot) -> None:

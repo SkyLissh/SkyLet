@@ -1,16 +1,11 @@
-from typing import Any, Generic, Mapping, Type, TypeVar
+from typing import Any, Generic, Optional, TypeVar
 
-from app.models.base import Base
+from pydantic import BaseModel
+from pydantic.generics import GenericModel
 
-T = TypeVar("T", bound=Base)
-E = TypeVar("E")
+T = TypeVar("T", bound=BaseModel)
 
 
-class ApiResponse(Generic[T]):
-    def __init__(self, json: Mapping[str, Any], response: Type[T]) -> None:
-        self.json = json
-        self.response = response
-
-    @property
-    def data(self) -> list[T]:
-        return [self.response.from_json(d) for d in self.json["data"]]
+class ApiResponse(GenericModel, Generic[T]):
+    data: list[T]
+    pagination: Optional[dict[str, Any]]
