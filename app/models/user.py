@@ -12,4 +12,5 @@ class User(BaseModel):
     description: str
     profile_image_url: str
 
+    view_count: int
     created_at: datetime

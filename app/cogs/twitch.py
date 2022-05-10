@@ -49,6 +49,14 @@ class Twitch(cmd.Cog):
 
         return users.data[0]
 
+    async def get_followers(self, id: int) -> int:
+        res = await chttp_twitch.get("/users/follows", params={"to_id": id, "first": 1})
+        res.raise_for_status()
+
+        data = await res.json()
+
+        return data["total"]
+
     @twitch.command()
     async def live(self, ctx: cmd.Context, *, streamer: str = "skylissh") -> None:
         if re.match(r"[\w]+$", streamer) is None:
@@ -68,7 +76,9 @@ class Twitch(cmd.Cog):
             return
 
         if user := await self.get_streamer(streamer):
-            embed = user_embed(user)
+            follows = await self.get_followers(user.id)
+
+            embed = user_embed(user, follows)
             await ctx.send(embed=embed)
         else:
             await ctx.send(f"{streamer} is not on Twitch")

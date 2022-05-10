@@ -24,13 +24,22 @@ def stream_embed(stream: Stream) -> Embed:
     return embed
 
 
-def user_embed(user: User) -> Embed:
+def user_embed(user: User, follows: int) -> Embed:
+    views: str = format_number(user.view_count)
+    followers: str = format_number(follows)
+
     embed = Embed()
     embed.color = 0x6441A4
+
     embed.title = f"{user.display_name} is on Twitch"
     embed.url = f"https://twitch.tv/{user.login}"
+
     embed.description = f"{user.description}"
     embed.set_thumbnail(url=f"{user.profile_image_url}")
+
+    embed.add_field(name=":busts_in_silhouette: Followers", value=f"{followers}")
+    embed.add_field(name=":eyes: Views", value=f"{views}")
+
     embed.set_footer(text="Created at")
     embed.timestamp = user.created_at
 
