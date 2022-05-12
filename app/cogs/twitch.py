@@ -106,8 +106,7 @@ class Twitch(cmd.Cog):
 
     @cmd.Cog.listener()
     async def on_ready(self) -> None:
-        # await self.check_streams.start()
-        pass
+        await self.check_streams.start()
 
 
 def setup(bot: cmd.Bot) -> None:
