@@ -20,7 +20,3 @@ class Stream(BaseModel):
     @validator("thumbnail_url")
     def parse_thumbnail_url(cls, v: str) -> str:
         return v.replace("{width}", "1920").replace("{height}", "1080")
-
-    @validator("started_at")
-    def parse_started_at(cls, v: str) -> datetime:
-        return datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
