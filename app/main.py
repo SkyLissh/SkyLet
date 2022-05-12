@@ -23,7 +23,7 @@ bot = commands.Bot(
     command_prefix=commands.when_mentioned_or(PREFIX), description="SkyLet discord bot"
 )
 
-modules: list[str] = ["app.cogs.twitch"]
+modules: list[str] = ["app.cogs.twitch", "app.cogs.anti_spam"]
 
 # Load all modules
 for m in modules:
