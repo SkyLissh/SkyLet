@@ -83,7 +83,7 @@ class Twitch(cmd.Cog):
         else:
             await ctx.send(f"{streamer} is not on Twitch")
 
-    @tasks.loop(seconds=30)
+    @tasks.loop(minutes=1)
     async def check_streams(self) -> None:
         print("Checking streams")
 
@@ -103,7 +103,6 @@ class Twitch(cmd.Cog):
                 self.last_tick = True
 
         elif not stream and self.last_tick:
-            print("Stream is offline")
             self.last_tick = False
 
     @cmd.Cog.listener()
