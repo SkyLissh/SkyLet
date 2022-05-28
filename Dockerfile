@@ -40,17 +40,13 @@ COPY --from=builder $PYSETUP_PATH $PYSETUP_PATH
 
 RUN poetry install
 
-WORKDIR /skylet
-
-# CMD ["python", "-m", "app.main"]
+WORKDIR /skylet-discord
 
 # Production image
 FROM python-base as production
 
 # RUN mkdir $PYSETUP_PATH
 COPY --from=builder $PYSETUP_PATH $PYSETUP_PATH
-COPY . /skylet
+COPY . /skylet-discord
 
-WORKDIR /skylet
-
-# CMD ["python", "-m", "app.main"]
+WORKDIR /skylet-discord

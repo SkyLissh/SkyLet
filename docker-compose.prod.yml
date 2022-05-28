@@ -2,16 +2,15 @@ version: "3.8"
 
 services:
   app:
-    image: "skylet:latest"
-    container_name: "skylet"
+    image: "skylet-discord:latest"
+    container_name: "skylet-discord"
     build:
       target: production
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/skylet
+      - .:/skylet-discord
     command: sh ./start.sh
     env_file:
       - .env
     restart: always
-  
