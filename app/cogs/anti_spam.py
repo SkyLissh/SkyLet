@@ -1,6 +1,6 @@
 from typing import Optional
 
-from discord import Member, Message, TextChannel, User, utils
+from discord import Member, Message, Role, TextChannel, User, utils
 from discord.ext import commands as cmd
 
 
@@ -17,36 +17,86 @@ class AntiSpam(cmd.Cog):
         self.verified = verified
         self.logs = logs
 
-    @cmd.group()
-    async def antispam(self, ctx: cmd.Context) -> None:
-        """
-        Anti-spam commands
-        """
-        if ctx.invoked_subcommand is None:
-            await ctx.send("Invalid command passed")
-
-    async def mute_user(self, user: Member) -> None:
+    async def check_roles(self, user: Member) -> list[Role]:
         muted = utils.get(user.guild.roles, id=self.muted)
         verified = utils.get(user.guild.roles, id=self.verified)
 
         if (not muted) or (not verified):
-            return
+            return []
+
+        return [muted, verified]
+
+    async def text_channel(self, id: int) -> TextChannel:
+        channel = self.bot.get_channel(id)
+
+        if not isinstance(channel, TextChannel):
+            raise ValueError("Channel is not a text channel")
+
+        return channel
+
+    async def mute_user(self, user: Member) -> None:
+        muted, verified = await self.check_roles(user)
+
+        channel = await self.text_channel(self.logs)
 
         if muted in user.roles:
+            await channel.send(f"{user.mention} is already muted")
             return
 
         await user.add_roles(muted)
         await user.remove_roles(verified)
 
-        channel = self.bot.get_channel(self.logs)
+        await channel.send(f"{user.mention} has been muted")
 
-        if isinstance(channel, TextChannel):
-            await channel.send(f"{user.mention} has been muted for spamming")
+    async def unmute_user(self, user: Member) -> None:
+        muted, verified = await self.check_roles(user)
+
+        channel = await self.text_channel(self.logs)
+
+        if verified in user.roles:
+            await channel.send(f"{user.mention} is not muted")
+            return
+
+        await user.add_roles(verified)
+        await user.remove_roles(muted)
+
+        await channel.send(f"{user.mention} has been unmuted")
+
+    @cmd.command()
+    async def mute(self, ctx: cmd.Context) -> None:
+        try:
+            user = ctx.message.mentions[0]
+
+            if user.bot:
+                await ctx.send("Bots cannot be muted")
+                return
+
+            if not isinstance(user, Member):
+                return
+
+            await self.mute_user(user)
+        except IndexError:
+            await ctx.send("Please mention a user to mute")
+
+    @cmd.command()
+    async def unmute(self, ctx: cmd.Context) -> None:
+        try:
+            user = ctx.message.mentions[0]
+
+            if not isinstance(user, Member):
+                return
+
+            await self.unmute_user(user)
+        except IndexError:
+            await ctx.send("Please mention a user to unmute")
 
     @cmd.Cog.listener()
     async def on_message(self, message: Message) -> None:
         message_content = f"{message.author.id}: {message.content}"
         mentions = message.raw_mentions
+
+        if message.author.bot:
+            return
 
         if isinstance(message.author, User):
             return
@@ -69,7 +119,7 @@ class AntiSpam(cmd.Cog):
             await message.delete()
             self.spam_count += 2
 
-        if self.spam_count > 1:
+        if self.spam_count > 3:
             self.spam_count = 0
 
             await self.mute_user(message.author)
@@ -78,6 +128,6 @@ class AntiSpam(cmd.Cog):
 def setup(bot: cmd.Bot) -> None:
     muted_role = 847192861627645982
     verified_role = 844333947366539274
-    logs_channel = 844344065024720908
+    logs_channel = 976242439373328404
 
     bot.add_cog(AntiSpam(bot, muted_role, verified_role, logs_channel))
