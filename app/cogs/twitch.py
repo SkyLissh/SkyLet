@@ -25,7 +25,7 @@ class Twitch(cmd.Cog):
         Twitch commands
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send("Invalid command passed")
+            await ctx.send("Twitch: Invalid command passed")
 
     async def is_live(self, streamer: str) -> Optional[Stream]:
         res = await chttp_twitch.get("/streams", params={"user_login": streamer})
@@ -83,16 +83,15 @@ class Twitch(cmd.Cog):
         else:
             await ctx.send(f"{streamer} is not on Twitch")
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(seconds=30)
     async def check_streams(self) -> None:
+        print("Checking streams")
 
-        if self.last_tick:
-            return
-
-        self.last_tick = True
         await self.bot.wait_until_ready()
 
-        if stream := await self.is_live("skylissh"):
+        stream = await self.is_live("skylissh")
+
+        if stream and (not self.last_tick):
             embed = stream_embed(stream)
             channel = self.bot.get_channel(self.channel)
 
@@ -100,9 +99,12 @@ class Twitch(cmd.Cog):
                 await channel.send(
                     ":red_circle: SkyLissh is live ||@everyone||", embed=embed
                 )
-                return
 
-        self.last_tick = False
+                self.last_tick = True
+
+        elif not stream and self.last_tick:
+            print("Stream is offline")
+            self.last_tick = False
 
     @cmd.Cog.listener()
     async def on_ready(self) -> None:
