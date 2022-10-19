@@ -10,6 +10,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/skylet-discord
-    command: sh ./dev-start.sh
+    command: sh ./scripts/dev-start.sh
     env_file:
       - .env

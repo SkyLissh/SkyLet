@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/skylet-discord
-    command: sh ./start.sh
+    command: sh ./scripts/start.sh
     env_file:
       - .env
     restart: always

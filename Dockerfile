@@ -50,3 +50,5 @@ COPY --from=builder $PYSETUP_PATH $PYSETUP_PATH
 COPY . /skylet-discord
 
 WORKDIR /skylet-discord
+
+CMD ["sh", "scripts/start.sh"]
