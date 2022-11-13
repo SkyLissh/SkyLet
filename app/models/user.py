@@ -19,4 +19,4 @@ class User(BaseModel):
 
     @validator("view_count")
     def parse_view_count(cls, v: int) -> str:
-        return format_number(v)
+        return format_number(int(v))

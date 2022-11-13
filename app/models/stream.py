@@ -13,6 +13,7 @@ class Stream(BaseModel):
     user_login: str
 
     game_name: str
+    game_id: str
 
     title: str
     viewer_count: str
@@ -29,7 +30,7 @@ class Stream(BaseModel):
 
     @validator("viewer_count")
     def parse_viewer_count(cls, v: int) -> str:
-        return format_number(v)
+        return format_number(int(v))
 
     @validator("url")
     def parse_url(cls, v: str, values: "Stream") -> str:
