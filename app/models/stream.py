@@ -21,7 +21,10 @@ class Stream(BaseModel):
     thumbnail_url: str
 
     started_at: datetime
-    url: str = "https://twitch.tv/{user_login}"
+
+    @property
+    def url(self) -> str:
+        return f"https://twitch.tv/{self.user_login}"
 
     @validator("thumbnail_url")
     def parse_thumbnail_url(cls, v: str) -> str:
