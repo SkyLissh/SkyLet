@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 from pydantic import BaseModel, validator
@@ -20,18 +21,13 @@ class Stream(BaseModel):
     thumbnail_url: str
 
     started_at: datetime
-    url: str
+    url: str = "https://twitch.tv/{user_login}"
 
     @validator("thumbnail_url")
     def parse_thumbnail_url(cls, v: str) -> str:
-        dt = datetime.now()
-        v.replace("{width}", "1920").replace("{height}", "1080")
-        return f"{v}?{int(dt.timestamp())}"
+        url = v.replace("{width}", "1920").replace("{height}", "1080")
+        return f"{url}?{int(time.time())}"
 
     @validator("viewer_count")
     def parse_viewer_count(cls, v: int) -> str:
         return format_number(int(v))
-
-    @validator("url")
-    def parse_url(cls, v: str, values: "Stream") -> str:
-        return f"https://twitch.tv/{values.user_login}"
