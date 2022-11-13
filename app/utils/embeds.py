@@ -1,11 +1,10 @@
 from discord import Embed
 
-from app.models.stream import Stream
-from app.models.user import User
+from app.models import Game, Stream, User
 from app.utils.format_number import format_number
 
 
-def stream_embed(stream: Stream, user: User) -> Embed:
+def stream_embed(*, stream: Stream, user: User, game: Game) -> Embed:
     embed = Embed()
     embed.color = 0x6441A4
 
@@ -15,10 +14,13 @@ def stream_embed(stream: Stream, user: User) -> Embed:
         icon_url=user.profile_image_url,
     )
     embed.title = stream.title
-    embed.url = stream.url
 
-    embed.description = f"Playing {stream.game_name} for {stream.viewer_count} viewers"
+    embed.url = stream.url
     embed.set_image(url=stream.thumbnail_url)
+    embed.set_thumbnail(url=game.box_art_url)
+
+    embed.add_field(name=":video_game: Playing", value=stream.game_name)
+    embed.add_field(name=":eyes: Viewers", value=stream.viewer_count)
 
     embed.set_footer(text="SkyLet")
     embed.timestamp = stream.started_at
@@ -43,5 +45,13 @@ def user_embed(user: User, follows: int) -> Embed:
 
     embed.set_footer(text="Created at")
     embed.timestamp = user.created_at
+
+    return embed
+
+
+def error_embed(message: str) -> Embed:
+    embed = Embed()
+    embed.color = 0xFF0000
+    embed.description = f":x: Error: {message}"
 
     return embed

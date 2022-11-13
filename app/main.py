@@ -8,6 +8,8 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from tabulate import tabulate
 
+from app.utils.embeds import error_embed
+
 load_dotenv()
 
 log: logging.Logger = logging.getLogger(__name__)
@@ -23,7 +25,7 @@ bot = commands.Bot(
     command_prefix=commands.when_mentioned_or(PREFIX), description="SkyLet discord bot"
 )
 
-modules: list[str] = ["app.cogs.twitch", "app.cogs.anti_spam"]
+modules: list[str] = ["app.cogs.twitch.twitch", "app.cogs.anti_spam"]
 
 # Load all modules
 for m in modules:
@@ -55,6 +57,15 @@ async def on_ready() -> None:
         ["users", f"{len(bot.users)}"],
     ]
     log.info("\n" + tabulate(table_rows))
+
+
+@bot.event
+async def on_command_error(ctx: commands.Context, error: Exception) -> None:
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(embed=error_embed("Command not found"))
+        return
+
+    log.error(f"Error in command {ctx.command}: {error}")
 
 
 if __name__ == "__main__":
