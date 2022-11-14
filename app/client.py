@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands as cmd
 from tabulate import tabulate
 
-from app.utils.embeds import error_embed
+from app.utils.embeds import error_embed, invalid_command_embed
 
 ArgumentError = (
     cmd.MissingRequiredArgument,
@@ -44,12 +44,14 @@ class SkyLet(cmd.Bot):
         self.log.info("\n" + tabulate(table_rows))
 
     async def on_command_error(self, ctx: cmd.Context, error: Exception) -> None:
+        assert ctx.command is not None
+
         if isinstance(error, cmd.CommandNotFound):
             await ctx.send(embed=error_embed("Command not found"))
             return
 
         if isinstance(error, ArgumentError):
-            await ctx.send(embed=error_embed("Missing required argument"))
+            await ctx.send(embed=invalid_command_embed(ctx.command))
             return
 
         if isinstance(error, cmd.MemberNotFound):

@@ -2,8 +2,10 @@ from datetime import datetime
 from typing import Union
 
 from discord import ClientUser, Embed, Member
+from discord.ext import commands as cmd
 
 from app.models import Game, Stream, User
+from app.utils.arguments_help import argument_help
 from app.utils.format_number import format_number
 
 
@@ -94,5 +96,19 @@ def mute_embed(
 
     embed.set_footer(text="SkyLet")
     embed.timestamp = datetime.utcnow()
+
+    return embed
+
+
+def invalid_command_embed(command: cmd.Command) -> Embed:
+    embed = Embed()
+    embed.color = 0xF54545
+
+    params = [f"`[{name}]`" for name in command.params.keys()]
+
+    embed.set_author(name="Invalid command usage, try using it like this:")
+    embed.description = f"{command.name} {' '.join(params)}"
+
+    embed.add_field(name=":blue_book: Arguments", value=argument_help(command.params))
 
     return embed
