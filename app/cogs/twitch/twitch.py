@@ -86,5 +86,5 @@ class Twitch(cmd.Cog):
         await self.check_streams.start()
 
 
-def setup(bot: cmd.Bot) -> None:
-    bot.add_cog(Twitch(bot, 844345187819847701))
+async def setup(bot: cmd.Bot) -> None:
+    await bot.add_cog(Twitch(bot, 844345187819847701))
