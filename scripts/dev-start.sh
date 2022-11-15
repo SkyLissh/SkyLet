@@ -3,9 +3,4 @@
 set -o errexit
 set -o nounset
 
-watchmedo auto-restart \
-    --patterns="*.py" \
-    --recursive \
-    --directory="app/" \
-    -- \
-    python -m app.main
+watchfiles "python -m app.main" "app"

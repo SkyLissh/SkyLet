@@ -1,3 +1,5 @@
+import asyncio
+import importlib.util
 import logging
 import os
 from typing import Optional
@@ -10,25 +12,39 @@ from app.client import SkyLet
 
 load_dotenv()
 discord.utils.setup_logging()
-
 log: logging.Logger = logging.getLogger(__name__)
 
-PREFIX: str = os.getenv("DISCORD_PREFIX", ">")
-DISCORD_TOKEN: Optional[str] = os.getenv("DISCORD_TOKEN")
 
-if DISCORD_TOKEN is None:
-    log.error("DISCORD_TOKEN is not set")
-    exit(0)
+async def main():
+    PREFIX: str = os.getenv("DISCORD_PREFIX", ">")
+    DISCORD_TOKEN: Optional[str] = os.getenv("DISCORD_TOKEN")
 
-intents = discord.Intents.default()
-intents.message_content = True
+    if DISCORD_TOKEN is None:
+        log.error("DISCORD_TOKEN is not set")
+        exit(0)
 
-bot = SkyLet(
-    command_prefix=commands.when_mentioned_or(PREFIX),
-    description="SkyLet discord bot",
-    intents=intents,
-)
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    bot = SkyLet(
+        command_prefix=commands.when_mentioned_or(PREFIX),
+        description="SkyLet discord bot",
+        intents=intents,
+    )
+
+    await bot.start(DISCORD_TOKEN)
 
 
 if __name__ == "__main__":
-    bot.run(DISCORD_TOKEN, log_handler=None)
+    spec = importlib.util.find_spec("uvloop")
+    if spec is not None:
+        import uvloop  # type: ignore
+
+        uvloop.install()
+    else:
+        log.warning("uvloop is not installed, falling back to asyncio")
+
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        log.info("Stopping bot")
