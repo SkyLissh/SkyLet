@@ -44,11 +44,11 @@ class SkyLet(cmd.Bot):
         self.log.info("\n" + tabulate(table_rows))
 
     async def on_command_error(self, ctx: cmd.Context, error: Exception) -> None:
-        assert ctx.command is not None
-
         if isinstance(error, cmd.CommandNotFound):
             await ctx.send(embed=error_embed("Command not found"))
             return
+
+        assert ctx.command is not None
 
         if isinstance(error, ArgumentError):
             await ctx.send(embed=invalid_command_embed(ctx.command))
