@@ -1,6 +1,6 @@
 FROM python:3.9-slim as python-base
 
-ENV POETRY_VERSION=1.1.13 \
+ENV POETRY_VERSION=1.2.2 \
   POETRY_NO_INTERACTION=1 \
   POETRY_HOME="/opt/poetry" \
   # Make poetry create virtualenvs in the project root
