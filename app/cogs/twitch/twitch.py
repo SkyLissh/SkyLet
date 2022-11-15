@@ -5,6 +5,7 @@ from discord import TextChannel
 from discord.ext import commands as cmd
 from discord.ext import tasks
 
+from app.client import SkyLet
 from app.cogs.twitch.api import TwitchAPI
 from app.models import User
 from app.utils.embeds import error_embed, stream_embed, user_embed
@@ -18,7 +19,9 @@ class Twitch(cmd.Cog):
         self.api = TwitchAPI()
         # self.streamer = streamer
 
-    async def valid_streamer(self, ctx: cmd.Context, streamer: str) -> Optional[User]:
+    async def valid_streamer(
+        self, ctx: cmd.Context[SkyLet], streamer: str
+    ) -> Optional[User]:
         if re.match(r"^[a-zA-Z0-9_]{4,25}$", streamer) is None:
             await ctx.send(embed=error_embed("Invalid username"))
             return None
@@ -32,7 +35,9 @@ class Twitch(cmd.Cog):
         return user
 
     @cmd.command()
-    async def twitch(self, ctx: cmd.Context, *, streamer: str = "skylissh") -> None:
+    async def twitch(
+        self, ctx: cmd.Context[SkyLet], streamer: str = "skylissh"
+    ) -> None:
         """
         Check if a streamer is live on Twitch
         """

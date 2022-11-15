@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.models import ApiResponse, Game, Stream, User
+from app.models import ApiResponse, Follower, Game, Stream, User
 from app.utils.chttp import chttp_twitch
 
 
@@ -31,9 +31,10 @@ class TwitchAPI:
         res = await chttp_twitch.get("/users/follows", params={"to_id": id, "first": 1})
         res.raise_for_status()
 
-        data = await res.json()
+        data = ApiResponse[Follower].parse_obj(await res.json())
+        assert data.total is not None
 
-        return data["total"]
+        return data.total
 
     async def get_game(self, id: str) -> Optional[Game]:
         res = await chttp_twitch.get("/games", params={"id": id})

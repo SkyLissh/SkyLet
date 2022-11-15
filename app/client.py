@@ -4,6 +4,7 @@ import traceback
 
 import discord
 from discord.ext import commands as cmd
+from discord.ext.commands._types import BotT
 from tabulate import tabulate
 
 from app.utils.embeds import error_embed, invalid_command_embed
@@ -43,7 +44,7 @@ class SkyLet(cmd.Bot):
         ]
         self.log.info("\n" + tabulate(table_rows))
 
-    async def on_command_error(self, ctx: cmd.Context, error: Exception) -> None:
+    async def on_command_error(self, ctx: cmd.Context[BotT], error: Exception) -> None:
         if isinstance(error, cmd.CommandNotFound):
             await ctx.send(embed=error_embed("Command not found"))
             return

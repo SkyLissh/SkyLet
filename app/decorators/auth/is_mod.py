@@ -2,11 +2,12 @@ from discord import Member
 from discord.ext import commands as cmd
 from discord.ext.commands._types import Check
 
+from app.client import SkyLet
 from app.utils.embeds import error_embed
 
 
-def is_mod() -> Check:
-    async def predicate(ctx: cmd.Context) -> bool:
+def is_mod() -> Check[cmd.Context[SkyLet]]:
+    async def predicate(ctx: cmd.Context[SkyLet]) -> bool:
         user = ctx.author
         assert isinstance(user, Member)
 

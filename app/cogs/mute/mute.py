@@ -4,6 +4,7 @@ from discord import Member, Message, User
 from discord.ext import commands as cmd
 from discord.ext.commands.errors import MemberNotFound
 
+from app.client import SkyLet
 from app.cogs.mute.mute_utils import MuteUtils
 from app.decorators.auth import is_mod
 from app.utils.embeds import error_embed
@@ -25,7 +26,7 @@ class AntiSpam(cmd.Cog):
 
     @cmd.command()
     @is_mod()
-    async def mute(self, ctx: cmd.Context, user: Member, reason: str) -> None:
+    async def mute(self, ctx: cmd.Context[SkyLet], user: Member, reason: str) -> None:
         try:
             if user.bot:
                 await ctx.send(embed=error_embed("Bots cannot be muted"))
@@ -42,7 +43,7 @@ class AntiSpam(cmd.Cog):
 
     @cmd.command()
     @is_mod()
-    async def unmute(self, ctx: cmd.Context, user: Member) -> None:
+    async def unmute(self, ctx: cmd.Context[SkyLet], user: Member) -> None:
         try:
             await self.mute_utils.unmute_user(user)
         except MemberNotFound:

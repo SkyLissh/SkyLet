@@ -1,17 +1,19 @@
 from datetime import datetime
-from typing import Union
+from typing import Any, Union
 
 from discord import ClientUser, Embed, Member
 from discord.ext import commands as cmd
+from typing_extensions import ParamSpec
 
 from app.models import Game, Stream, User
 from app.utils.arguments_help import argument_help
 from app.utils.format_number import format_number
 
+P = ParamSpec("P")
+
 
 def stream_embed(*, stream: Stream, user: User, game: Game) -> Embed:
-    embed = Embed()
-    embed.color = 0x6441A4
+    embed = Embed(colour=0x6441A4)
 
     embed.set_author(
         name=f"{stream.user_name} is live on Twitch",
@@ -36,8 +38,7 @@ def stream_embed(*, stream: Stream, user: User, game: Game) -> Embed:
 def user_embed(user: User, follows: int) -> Embed:
     followers: str = format_number(follows)
 
-    embed = Embed()
-    embed.color = 0x6441A4
+    embed = Embed(colour=0x6441A4)
 
     embed.title = f"{user.display_name} is on Twitch"
     embed.url = f"https://twitch.tv/{user.login}"
@@ -55,16 +56,14 @@ def user_embed(user: User, follows: int) -> Embed:
 
 
 def info_embed(message: str) -> Embed:
-    embed = Embed()
-    embed.color = 0x6441A4
+    embed = Embed(colour=0x6441A4)
     embed.description = f":information_source: Info: {message}"
 
     return embed
 
 
 def error_embed(message: str) -> Embed:
-    embed = Embed()
-    embed.color = 0xF54545
+    embed = Embed(color=0xF54545)
     embed.description = f":x: Error: {message}"
 
     return embed
@@ -76,8 +75,7 @@ def mute_embed(
     moderator: Union[Member, ClientUser],
     reason: str,
 ) -> Embed:
-    embed = Embed()
-    embed.color = 0x6441A4
+    embed = Embed(colour=0x6441A4)
 
     embed.set_author(
         name=f"{user.display_name} has been muted", icon_url=user.display_avatar.url
@@ -100,10 +98,8 @@ def mute_embed(
     return embed
 
 
-def invalid_command_embed(command: cmd.Command) -> Embed:
-    embed = Embed()
-    embed.color = 0xF54545
-
+def invalid_command_embed(command: cmd.Command[cmd.Cog, P, Any]) -> Embed:
+    embed = Embed(colour=0xF54545)
     params = [f"`[{name}]`" for name in command.params.keys()]
 
     embed.set_author(name="Invalid command usage, try using it like this:")

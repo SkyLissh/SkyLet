@@ -2,12 +2,11 @@
 	"python.defaultInterpreterPath": "python",
 
 	"python.linting.enabled": true,
-	"python.linting.pylintEnabled": false,
 	"python.linting.mypyEnabled": true,
 	"python.linting.flake8Enabled": true,
 
 	"python.formatting.provider": "black",
-	"python.sortImports.path": "isort",
+	"isort.path": ["isort"],
 
 	"python.analysis.typeCheckingMode": "basic",
 
