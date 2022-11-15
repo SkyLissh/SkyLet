@@ -40,7 +40,7 @@ if __name__ == "__main__":
     if spec is not None:
         import uvloop  # type: ignore
 
-        uvloop.install()
+        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     else:
         log.warning("uvloop is not installed, falling back to asyncio")
 

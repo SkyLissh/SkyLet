@@ -11,6 +11,7 @@ discord-py = "^2.1.0"
 tabulate = "^0.8.9"
 pydantic = "^1.9.0"
 watchfiles = "^0.18.1"
+uvloop = {version="^0.17.0", optional=true}
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
@@ -20,8 +21,9 @@ isort = "^5.10.1"
 autoflake = "^1.4"
 types-tabulate = "^0.8.6"
 
+
 [tool.poetry.extras]
-speed = ["uvloop"]
+speedups = ["uvloop"]
 
 [tool.black]
 exclude = '''
